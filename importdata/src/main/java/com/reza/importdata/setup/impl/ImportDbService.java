@@ -1,8 +1,14 @@
 package com.reza.importdata.setup.impl;
 
+import static java.time.format.ResolverStyle.STRICT;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.springframework.format.datetime.joda.LocalDateTimeParser;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,11 +72,15 @@ public class ImportDbService implements IImportDbService {
 			NodeList nodesLevel0 = doc.getChildNodes();
 			if (nodesLevel0 != null & nodesLevel0.getLength() > 0) {
 				Element nodesLevel1 = (Element) nodesLevel0.item(0);
-				String refId = nodesLevel1.getAttribute("RefId");
+				String refDate = nodesLevel1.getAttribute("RefId");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");
 				
+				LocalDateTime dateTime = LocalDateTime.parse(refDate, formatter);
+
+				marketPrice.setOriginalDateTime(dateTime);
 				if(nodesLevel1.getChildNodes() != null && nodesLevel1.getChildNodes().getLength() > 1) {
 					Element nodesLevel2 = (Element) nodesLevel1.getChildNodes().item(1);
-					String hourAndMin = nodesLevel2.getAttribute("HourAndMin");
+					
 					if(nodesLevel2.getChildNodes() != null && nodesLevel2.getChildNodes().getLength() > 1) {
 						
 						Element nodesLevel3 = (Element) nodesLevel2.getChildNodes().item(1);
@@ -78,11 +89,13 @@ public class ImportDbService implements IImportDbService {
 						String lossVal = nodesLevel3.getAttribute("loss");
 						String nameVal = nodesLevel3.getAttribute("name");
 						
-						marketPrice.setCongestion(Integer.parseInt(congestionVal));
-						marketPrice.setLoss(Integer.parseInt(lossVal));
-						marketPrice.setHubname(Integer.parseInt(nameVal));
-						marketPrice.setLmp(Integer.parseInt(lmpVal));
+						marketPrice.setCongestion(Float.parseFloat(congestionVal));
+						marketPrice.setLoss(Float.parseFloat(lossVal));
+						marketPrice.setHubname(nameVal);
+						marketPrice.setLmp(Float.parseFloat(lmpVal));
 					}
+					
+					System.out.println(marketPrice.toString());
 				}
 			}
 

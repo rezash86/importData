@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 
 public class MarketPrice {
 	private LocalDateTime originalDateTime;
-	private int hubname;
-	private int lmp;
-	private int loss;
-	private int congestion;
+	private String hubname;
+	private Float lmp;
+	private Float loss;
+	private Float congestion;
 	
 	
 	public MarketPrice() {
 		
 	}
 	
-	public MarketPrice(LocalDateTime originalDateTime, int hubname, int lmp, int loss, int congestion){
+	public MarketPrice(LocalDateTime originalDateTime, String hubname, Float lmp, Float loss, Float congestion){
 		this.originalDateTime = originalDateTime;
 		this.hubname = hubname;
 		this.lmp = lmp;
@@ -28,29 +28,36 @@ public class MarketPrice {
 	public void setOriginalDateTime(LocalDateTime originalDateTime) {
 		this.originalDateTime = originalDateTime;
 	}
-	public int getHubname() {
+	public String getHubname() {
 		return hubname;
 	}
-	public void setHubname(int hubname) {
+	public void setHubname(String hubname) {
 		this.hubname = hubname;
 	}
-	public int getLmp() {
+	public Float getLmp() {
 		return lmp;
 	}
-	public void setLmp(int lmp) {
+	public void setLmp(Float lmp) {
 		this.lmp = lmp;
 	}
-	public int getLoss() {
+	public Float getLoss() {
 		return loss;
 	}
-	public void setLoss(int loss) {
+	public void setLoss(Float loss) {
 		this.loss = loss;
 	}
-	public int getCongestion() {
+	public Float getCongestion() {
 		return congestion;
 	}
-	public void setCongestion(int congestion) {
+	public void setCongestion(Float congestion) {
 		this.congestion = congestion;
 	}
+
+	@Override
+	public String toString() {
+		return "MarketPrice [originalDateTime=" + originalDateTime + ", hubname=" + hubname + ", lmp=" + lmp + ", loss="
+				+ loss + ", congestion=" + congestion + "]";
+	}
+	
 	
 }
