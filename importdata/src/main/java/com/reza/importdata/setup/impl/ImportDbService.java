@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.jws.WebParam.Mode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -82,20 +83,25 @@ public class ImportDbService implements IImportDbService {
 					Element nodesLevel2 = (Element) nodesLevel1.getChildNodes().item(1);
 					
 					if(nodesLevel2.getChildNodes() != null && nodesLevel2.getChildNodes().getLength() > 1) {
+						for (int index=0; index< nodesLevel2.getChildNodes().getLength() ; index++) {
+							if((index % 2)!=0) {
+								Element nodesLevel3 = (Element) nodesLevel2.getChildNodes().item(index);
+								String lmpVal = nodesLevel3.getAttribute("LMP");
+								String congestionVal = nodesLevel3.getAttribute("congestion");
+								String lossVal = nodesLevel3.getAttribute("loss");
+								String nameVal = nodesLevel3.getAttribute("name");
+								
+								marketPrice.setCongestion(Float.parseFloat(congestionVal));
+								marketPrice.setLoss(Float.parseFloat(lossVal));
+								marketPrice.setHubname(nameVal);
+								marketPrice.setLmp(Float.parseFloat(lmpVal));
+								marketPrices.add(marketPrice);
+							}
+						}
 						
-						Element nodesLevel3 = (Element) nodesLevel2.getChildNodes().item(1);
-						String lmpVal = nodesLevel3.getAttribute("LMP");
-						String congestionVal = nodesLevel3.getAttribute("congestion");
-						String lossVal = nodesLevel3.getAttribute("loss");
-						String nameVal = nodesLevel3.getAttribute("name");
-						
-						marketPrice.setCongestion(Float.parseFloat(congestionVal));
-						marketPrice.setLoss(Float.parseFloat(lossVal));
-						marketPrice.setHubname(nameVal);
-						marketPrice.setLmp(Float.parseFloat(lmpVal));
 					}
 					
-					System.out.println(marketPrice.toString());
+					//System.out.println(marketPrices.toString());
 				}
 			}
 
@@ -110,7 +116,7 @@ public class ImportDbService implements IImportDbService {
 			e.printStackTrace();
 		}
 
-		return Collections.emptyList();
+		return marketPrices;
 	}
 
 	protected IImportDbDataService getImportDataDbService() {
