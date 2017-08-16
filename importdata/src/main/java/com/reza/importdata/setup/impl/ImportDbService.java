@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.reza.importdata.common.AppContext;
+import com.reza.importdata.common.ApplicationConstants;
 import com.reza.importdata.model.MarketPrice;
 import com.reza.importdata.setup.api.IImportDbService;
 import com.reza.importdata.setup.impl.dataaccess.IImportDbDataService;
@@ -53,7 +54,7 @@ public class ImportDbService implements IImportDbService {
 	public List<MarketPrice> fetchData() {
 
 		List<MarketPrice> marketPrices = new ArrayList<MarketPrice>();
-		String feedUrl = "https://www.misoenergy.org/ria/LMP.aspx?query=udstable&format=xml";
+		String feedUrl = ApplicationConstants.FEED_URL;
 
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
@@ -66,8 +67,8 @@ public class ImportDbService implements IImportDbService {
 			NodeList nodesLevel0 = doc.getChildNodes();
 			if (nodesLevel0 != null & nodesLevel0.getLength() > 0) {
 				Element nodesLevel1 = (Element) nodesLevel0.item(0);
-				String refDate = nodesLevel1.getAttribute("RefId");
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm");
+				String refDate = nodesLevel1.getAttribute(ApplicationConstants.REF_ID);
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ApplicationConstants.DATE_TIME_PATTERN);
 				
 				LocalDateTime dateTime = LocalDateTime.parse(refDate, formatter);
 
@@ -81,10 +82,10 @@ public class ImportDbService implements IImportDbService {
 								MarketPrice marketPrice = new MarketPrice();
 								marketPrice.setOriginalDateTime(dateTime);
 								Element nodesLevel3 = (Element) nodesLevel2.getChildNodes().item(index);
-								String lmpVal = nodesLevel3.getAttribute("LMP");
-								String congestionVal = nodesLevel3.getAttribute("congestion");
-								String lossVal = nodesLevel3.getAttribute("loss");
-								String nameVal = nodesLevel3.getAttribute("name");
+								String lmpVal = nodesLevel3.getAttribute(ApplicationConstants.LMP);
+								String congestionVal = nodesLevel3.getAttribute(ApplicationConstants.CONGESTION);
+								String lossVal = nodesLevel3.getAttribute(ApplicationConstants.LOSS);
+								String nameVal = nodesLevel3.getAttribute(ApplicationConstants.HUB_NAME);
 								
 								marketPrice.setCongestion(Float.parseFloat(congestionVal));
 								marketPrice.setLoss(Float.parseFloat(lossVal));

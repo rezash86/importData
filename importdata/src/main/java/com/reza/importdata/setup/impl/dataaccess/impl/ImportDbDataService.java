@@ -38,5 +38,6 @@ public class ImportDbDataService implements IImportDbDataService{
 		List<MarketPrice> serverStatus = jdbcTemplateObject.query(SQL, new LocalDateTime[] {marketPriceTime}, new MarketPriceMapper());
 		return serverStatus.get(0);
 	}
+	
 
 }
