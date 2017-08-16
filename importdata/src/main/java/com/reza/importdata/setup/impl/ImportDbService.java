@@ -1,25 +1,19 @@
 package com.reza.importdata.setup.impl;
 
-import static java.time.format.ResolverStyle.STRICT;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.jws.WebParam.Mode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.springframework.format.datetime.joda.LocalDateTimeParser;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,7 +58,6 @@ public class ImportDbService implements IImportDbService {
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
 		try {
-			MarketPrice marketPrice = new MarketPrice();
 
 			builder = builderFactory.newDocumentBuilder();
 			URL url = new URL(feedUrl);
@@ -78,13 +71,15 @@ public class ImportDbService implements IImportDbService {
 				
 				LocalDateTime dateTime = LocalDateTime.parse(refDate, formatter);
 
-				marketPrice.setOriginalDateTime(dateTime);
+				
 				if(nodesLevel1.getChildNodes() != null && nodesLevel1.getChildNodes().getLength() > 1) {
 					Element nodesLevel2 = (Element) nodesLevel1.getChildNodes().item(1);
 					
 					if(nodesLevel2.getChildNodes() != null && nodesLevel2.getChildNodes().getLength() > 1) {
 						for (int index=0; index< nodesLevel2.getChildNodes().getLength() ; index++) {
 							if((index % 2)!=0) {
+								MarketPrice marketPrice = new MarketPrice();
+								marketPrice.setOriginalDateTime(dateTime);
 								Element nodesLevel3 = (Element) nodesLevel2.getChildNodes().item(index);
 								String lmpVal = nodesLevel3.getAttribute("LMP");
 								String congestionVal = nodesLevel3.getAttribute("congestion");
@@ -95,6 +90,8 @@ public class ImportDbService implements IImportDbService {
 								marketPrice.setLoss(Float.parseFloat(lossVal));
 								marketPrice.setHubname(nameVal);
 								marketPrice.setLmp(Float.parseFloat(lmpVal));
+								
+								
 								marketPrices.add(marketPrice);
 							}
 						}
