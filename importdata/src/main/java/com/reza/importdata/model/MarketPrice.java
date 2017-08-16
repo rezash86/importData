@@ -9,6 +9,11 @@ public class MarketPrice {
 	private int loss;
 	private int congestion;
 	
+	
+	public MarketPrice() {
+		
+	}
+	
 	public MarketPrice(LocalDateTime originalDateTime, int hubname, int lmp, int loss, int congestion){
 		this.originalDateTime = originalDateTime;
 		this.hubname = hubname;
