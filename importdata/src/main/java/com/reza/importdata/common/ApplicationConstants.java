@@ -1,7 +1,14 @@
 package com.reza.importdata.common;
 
+/**
+ * This class contains constants and messages
+ * @author PRSHM
+ *
+ */
 public class ApplicationConstants {
-	public static Long duration = 20L;
+	
+	public static Long DURATION = 20L;
+	public static Long REFRESH_DATA_INTERVAL = 300000L;
 	public static final String FEED_URL="https://www.misoenergy.org/ria/LMP.aspx?query=udstable&format=xml";
 	public static final String LMP="LMP";
 	public static final String CONGESTION="congestion";

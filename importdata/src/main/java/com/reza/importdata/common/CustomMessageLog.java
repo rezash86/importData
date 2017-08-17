@@ -1,9 +1,12 @@
 package com.reza.importdata.common;
 
-public class CustomMessageLog extends Exception{
+/**
+ * This class used for showing the message in the console.
+ * @author PRSHM
+ *
+ */
+public class CustomMessageLog{
 	
-	private static final long serialVersionUID = 1L;
-
 	public static void showLog(String message){
 		System.out.println(message);
 	}

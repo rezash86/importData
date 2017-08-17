@@ -30,22 +30,14 @@ public class ImportDbService implements IImportDbService {
 
 	public List<MarketPrice> fetchData() {
 		List<MarketPrice> marketPrices = new ArrayList<MarketPrice>();
-		String feedUrl = ApplicationConstants.FEED_URL;
-
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
 		try {
-
-			builder = builderFactory.newDocumentBuilder();
-			URL url = new URL(feedUrl);
-			URLConnection conn = url.openConnection();
-			Document doc = builder.parse(conn.getInputStream());
+			
+			Document doc = getDocument();
 			NodeList nodesLevel0 = doc.getChildNodes();
 			if (nodesLevel0 != null & nodesLevel0.getLength() > 0) {
 				Element nodesLevel1 = (Element) nodesLevel0.item(0);
 				String refDate = nodesLevel1.getAttribute(ApplicationConstants.REF_ID);
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ApplicationConstants.DATE_TIME_PATTERN);
-
 				LocalDateTime dateTime = LocalDateTime.parse(refDate, formatter);
 
 				if (nodesLevel1.getChildNodes() != null && nodesLevel1.getChildNodes().getLength() > 1) {
@@ -53,20 +45,11 @@ public class ImportDbService implements IImportDbService {
 
 					if (nodesLevel2.getChildNodes() != null && nodesLevel2.getChildNodes().getLength() > 1) {
 						for (int index = 0; index < nodesLevel2.getChildNodes().getLength(); index++) {
+							
 							if ((index % 2) != 0) {
-								MarketPrice marketPrice = new MarketPrice();
-								marketPrice.setOriginalDateTime(dateTime);
 								Element nodesLevel3 = (Element) nodesLevel2.getChildNodes().item(index);
-								String lmpVal = nodesLevel3.getAttribute(ApplicationConstants.LMP);
-								String congestionVal = nodesLevel3.getAttribute(ApplicationConstants.CONGESTION);
-								String lossVal = nodesLevel3.getAttribute(ApplicationConstants.LOSS);
-								String nameVal = nodesLevel3.getAttribute(ApplicationConstants.HUB_NAME);
-
-								marketPrice.setCongestion(Float.parseFloat(congestionVal));
-								marketPrice.setLoss(Float.parseFloat(lossVal));
-								marketPrice.setHubname(nameVal);
-								marketPrice.setLmp(Float.parseFloat(lmpVal));
-
+								MarketPrice marketPrice = getMarketPrice(nodesLevel3, dateTime);
+								
 								marketPrices.add(marketPrice);
 							}
 						}
@@ -74,7 +57,6 @@ public class ImportDbService implements IImportDbService {
 					}
 				}
 			}
-
 		} catch (ParserConfigurationException e) {
 			CustomMessageLog.showLog(e.getMessage());
 		} catch (IOException e) {
@@ -85,7 +67,53 @@ public class ImportDbService implements IImportDbService {
 
 		return marketPrices;
 	}
+	
+	/**
+	 * This function returns a marketPrice based on the element and dataTime
+	 * @param nodesLevel3
+	 * @param dateTime
+	 * @return
+	 */
+	private MarketPrice getMarketPrice(Element nodesLevel3, LocalDateTime dateTime){
+		MarketPrice marketPrice = new MarketPrice();
+		marketPrice.setOriginalDateTime(dateTime);
+		String lmpVal = nodesLevel3.getAttribute(ApplicationConstants.LMP);
+		String congestionVal = nodesLevel3.getAttribute(ApplicationConstants.CONGESTION);
+		String lossVal = nodesLevel3.getAttribute(ApplicationConstants.LOSS);
+		String nameVal = nodesLevel3.getAttribute(ApplicationConstants.HUB_NAME);
 
+		marketPrice.setCongestion(Float.parseFloat(congestionVal));
+		marketPrice.setLoss(Float.parseFloat(lossVal));
+		marketPrice.setHubname(nameVal);
+		marketPrice.setLmp(Float.parseFloat(lmpVal));
+		
+		return marketPrice;
+	}
+	
+	
+	/**
+	 * This method generates a Document from the Feed_Url
+	 * 
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws IOException
+	 * @throws SAXException
+	 */
+	private Document getDocument() throws ParserConfigurationException, IOException, SAXException {
+		
+		String feedUrl = ApplicationConstants.FEED_URL;
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = builderFactory.newDocumentBuilder();
+		URL url = new URL(feedUrl);
+		URLConnection conn = url.openConnection();
+		return builder.parse(conn.getInputStream());
+	}
+
+	/**
+	 * This function imports the marketPrices one by one
+	 * if All the rows inserted in the db it thorows True
+	 * otherwise it throws exception
+	 */
 	public boolean importData(List<MarketPrice> marketPrices) {
 		if (marketPrices.size() > 0) {
 			MarketPrice marketPrice = marketPrices.get(0);
@@ -95,11 +123,16 @@ public class ImportDbService implements IImportDbService {
 				return !errorInsert.isPresent();
 			}
 		}
+		
 		CustomMessageLog.showLog(ApplicationConstants.ERROR_CONNECTION_NOT_EXISTS);
 		return false;
 	}
-
 	
+	/**
+	 * insert market prices one by one
+	 * @param mp
+	 * @return
+	 */
 	private int insertDb(MarketPrice mp) {
 		return getImportDataDbService().createData(mp);
 	}

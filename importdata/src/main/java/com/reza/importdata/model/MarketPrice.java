@@ -2,6 +2,11 @@ package com.reza.importdata.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class is the main DTO of the application 
+ * @author PRSHM
+ *
+ */
 public class MarketPrice {
 	private LocalDateTime originalDateTime;
 	private String hubname;
@@ -11,7 +16,6 @@ public class MarketPrice {
 	
 	
 	public MarketPrice() {
-		
 	}
 	
 	public MarketPrice(LocalDateTime originalDateTime, String hubname, Float lmp, Float loss, Float congestion){

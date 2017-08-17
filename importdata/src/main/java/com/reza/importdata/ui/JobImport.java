@@ -10,25 +10,37 @@ import com.reza.importdata.model.MarketPrice;
 import com.reza.importdata.setup.api.IImportDbService;
 import com.reza.importdata.setup.impl.ImportDbService;
 
-public class AppUI {
-
-	public void doJob() {
+public class JobImport {
+	
+	/**
+	 * This function does the import job
+	 * for the duration being sent as a parameter
+	 * from Now until Now + duration(min)
+	 * it imports data from the web service
+	 * @param duration
+	 */
+	public void doJob(Long duration) {
 		LocalDateTime startTime = LocalDateTime.now();
-		while (LocalDateTime.now().compareTo(startTime.plusMinutes(ApplicationConstants.duration)) < 1){
+		while (LocalDateTime.now().compareTo(startTime.plusMinutes(duration)) < 1){
 			List<MarketPrice> data = getImportService().fetchData();
 			if(!data.isEmpty()) {
 				importData (data);
 			}
 			try {
-				Thread.sleep(300000);
-				//Thread.sleep(3000);
+				//Application stops working based on the config interval time
+				Thread.sleep(ApplicationConstants.REFRESH_DATA_INTERVAL);
 			} catch (InterruptedException e) {
 				CustomMessageLog.showLog(e.getMessage());
 			}
 		}
 	}
 	
-	
+	/**
+	 * if all the data imported successfully
+	 * it writes in the output 'successful'
+	 * otherwise writes 'unsuccessful'
+	 * @param marketPrices
+	 */
 	private void importData(List<MarketPrice> marketPrices) {
 		boolean importData = getImportService().importData(marketPrices);
 		if (importData) {

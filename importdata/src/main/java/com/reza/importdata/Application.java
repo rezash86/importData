@@ -1,15 +1,19 @@
 package com.reza.importdata;
 
-import com.reza.importdata.ui.AppUI;
+import com.reza.importdata.common.ApplicationConstants;
+import com.reza.importdata.ui.JobImport;
 
 public class Application {
 	public static void main(String[] args) {
 		runApp();
 	} 
 	
+	/**
+	 * Application starts here
+	 */
 	public static void runApp() {
-		AppUI app = new AppUI();
-		app.doJob();
+		JobImport app = new JobImport();
+		app.doJob(ApplicationConstants.DURATION);
 	}
 	
 }

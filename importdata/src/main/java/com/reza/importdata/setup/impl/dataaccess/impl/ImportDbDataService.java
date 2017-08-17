@@ -38,16 +38,7 @@ public class ImportDbDataService implements IImportDbDataService{
 				marketprice.getCongestion());
 	}
 
-	public MarketPrice getData(LocalDateTime marketPriceTime) {
-		String SQL = "select originaldatetime, hubname, lmp, loss, congestion from miso_market_price_five_minutes where originaldatetime=?";
-		List<MarketPrice> marketPrices = jdbcTemplateObject.query(SQL, new Timestamp [] {Timestamp.valueOf(marketPriceTime)} , new MarketPriceMapper());
-		if(!marketPrices.isEmpty()){
-			return marketPrices.get(0);
-		}
-		else{
-			return null;
-		}
-	}
+	
 
 	public boolean dataExists(LocalDateTime marketPriceTime) {
 		String SQL = "select originaldatetime, hubname, lmp, loss, congestion from miso_market_price_five_minutes where originaldatetime=?";

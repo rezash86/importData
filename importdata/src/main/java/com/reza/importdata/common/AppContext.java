@@ -1,11 +1,13 @@
 package com.reza.importdata.common;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * This class creates an instance for the applicationContext
+ * @author PRSHM
+ *
+ */
 public class AppContext {
 	private AppContext() {
 	}
@@ -22,7 +24,4 @@ public class AppContext {
 		return new ClassPathXmlApplicationContext("classpath:Beans.xml");
 	}
 	
-	public ExecutorService getThread(){
-		return Executors.newSingleThreadExecutor();
-	}
 }
