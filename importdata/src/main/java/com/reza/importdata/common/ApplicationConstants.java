@@ -1,6 +1,7 @@
 package com.reza.importdata.common;
 
 public class ApplicationConstants {
+	public static Long duration = 20L;
 	public static final String FEED_URL="https://www.misoenergy.org/ria/LMP.aspx?query=udstable&format=xml";
 	public static final String LMP="LMP";
 	public static final String CONGESTION="congestion";
@@ -9,5 +10,10 @@ public class ApplicationConstants {
 	public static final String REF_ID="RefId";
 	public static final String DATE_TIME_PATTERN="dd-MMM-yyyy HH:mm";
 	
+	public static final String ERROR_CONNECTION_NOT_EXISTS = "connection to server is not available";
+	public static final String DATABASE_ERROR = "Database problem";
+	public static final String ERROR_DATA_EXISTS = "Data is imported before";
+	public static final String MESSAGE_SUCCESSFUL_IMPORT ="Successfull import";
+	public static final String MESSAGE_UNSUCCESSFUL_IMPORT ="UnSuccessfull import";
 	
 }

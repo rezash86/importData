@@ -1,18 +1,18 @@
 package com.reza.importdata.setup.impl.dataaccess.impl;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-
-import com.reza.importdata.model.MarketPrice;
-import com.reza.importdata.setup.impl.dataaccess.IImportDbDataService;
-
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+import com.reza.importdata.model.MarketPrice;
+import com.reza.importdata.setup.impl.dataaccess.IImportDbDataService;
 
 
 @Component
@@ -22,11 +22,16 @@ public class ImportDbDataService implements IImportDbDataService{
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplateObject;
 	
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+		this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+	}
+	
 	public int createData(MarketPrice marketprice) {
 		String SQL = "insert into miso_market_price_five_minutes(originaldatetime, hubname, lmp, loss, congestion) "
 				+ " values(?, ?, ?, ?, ?) ";
 		return jdbcTemplateObject.update(SQL, 
-				marketprice.getOriginalDateTime(), 
+				Timestamp.valueOf(marketprice.getOriginalDateTime()), 
 				marketprice.getHubname(), 
 				marketprice.getLmp(), 
 				marketprice.getLoss(), 
@@ -35,8 +40,24 @@ public class ImportDbDataService implements IImportDbDataService{
 
 	public MarketPrice getData(LocalDateTime marketPriceTime) {
 		String SQL = "select originaldatetime, hubname, lmp, loss, congestion from miso_market_price_five_minutes where originaldatetime=?";
-		List<MarketPrice> serverStatus = jdbcTemplateObject.query(SQL, new LocalDateTime[] {marketPriceTime}, new MarketPriceMapper());
-		return serverStatus.get(0);
+		List<MarketPrice> marketPrices = jdbcTemplateObject.query(SQL, new Timestamp [] {Timestamp.valueOf(marketPriceTime)} , new MarketPriceMapper());
+		if(!marketPrices.isEmpty()){
+			return marketPrices.get(0);
+		}
+		else{
+			return null;
+		}
+	}
+
+	public boolean dataExists(LocalDateTime marketPriceTime) {
+		String SQL = "select originaldatetime, hubname, lmp, loss, congestion from miso_market_price_five_minutes where originaldatetime=?";
+		List<MarketPrice> marketPrices = jdbcTemplateObject.query(SQL, new Timestamp [] {Timestamp.valueOf(marketPriceTime)} , new MarketPriceMapper());
+		if(!marketPrices.isEmpty()){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 

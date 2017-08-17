@@ -8,5 +8,7 @@ public interface IImportDbDataService {
 	
 	public int createData(MarketPrice marketprice);
 	
+	public boolean dataExists(LocalDateTime marketPriceTime);
+	
 	public MarketPrice getData(LocalDateTime marketPriceTime);
 }
