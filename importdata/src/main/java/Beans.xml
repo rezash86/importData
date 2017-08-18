@@ -11,7 +11,7 @@
 		<property name="url"
 			value="jdbc:postgresql://localhost:5432/importDb" />
 		<property name="username" value="postgres" />
-		<property name="password" value="parinaz" />
+		<property name="password" value="****" />
 	</bean>
 
 	<bean id="ImportDbDataService"
