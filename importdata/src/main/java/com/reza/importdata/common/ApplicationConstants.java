@@ -7,7 +7,7 @@ package com.reza.importdata.common;
  */
 public class ApplicationConstants {
 	
-	public static Long DURATION = 20L;
+	public static Long DURATION = 10L;
 	public static Long REFRESH_DATA_INTERVAL = 300000L;
 	public static final String FEED_URL="https://www.misoenergy.org/ria/LMP.aspx?query=udstable&format=xml";
 	public static final String LMP="LMP";
@@ -22,5 +22,6 @@ public class ApplicationConstants {
 	public static final String ERROR_DATA_EXISTS = "Data is imported before";
 	public static final String MESSAGE_SUCCESSFUL_IMPORT ="Successfull import";
 	public static final String MESSAGE_UNSUCCESSFUL_IMPORT ="UnSuccessfull import";
+	public static final String MESSAGE_FINISH_IMPORT ="import finished";
 	
 }

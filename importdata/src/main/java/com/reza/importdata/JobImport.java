@@ -1,4 +1,4 @@
-package com.reza.importdata.ui;
+package com.reza.importdata;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +33,7 @@ public class JobImport {
 				CustomMessageLog.showLog(e.getMessage());
 			}
 		}
+		CustomMessageLog.showLog(ApplicationConstants.MESSAGE_FINISH_IMPORT);
 	}
 	
 	/**
