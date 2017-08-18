@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 /**
  * This class is the main DTO of the application 
- * @author PRSHM
+ * @author reza.sh
  *
  */
 public class MarketPrice {

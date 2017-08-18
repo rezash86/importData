@@ -5,7 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * This class creates an instance for the applicationContext
- * @author PRSHM
+ * @author reza.sh
  *
  */
 public class AppContext {

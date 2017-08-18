@@ -100,7 +100,6 @@ public class ImportDbService implements IImportDbService {
 	 * @throws SAXException
 	 */
 	private Document getDocument() throws ParserConfigurationException, IOException, SAXException {
-		
 		String feedUrl = ApplicationConstants.FEED_URL;
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -122,6 +121,10 @@ public class ImportDbService implements IImportDbService {
 				Optional<MarketPrice> errorInsert = marketPrices.stream().filter(mp -> insertDb(mp) != 1).findAny();
 				return !errorInsert.isPresent();
 			}
+			else{
+				CustomMessageLog.showLog(ApplicationConstants.ERROR_DATA_EXISTS);
+				return false;
+			}
 		}
 		
 		CustomMessageLog.showLog(ApplicationConstants.ERROR_CONNECTION_NOT_EXISTS);
@@ -137,7 +140,18 @@ public class ImportDbService implements IImportDbService {
 		return getImportDataDbService().createData(mp);
 	}
 
+	@Override
+	public List<MarketPrice> getData(LocalDateTime marketPriceTime) {
+		return getImportDataDbService().getData(marketPriceTime);
+	}
+	@Override
+	public void deleteData(LocalDateTime marketPriceTime){
+		getImportDataDbService().deleteData(marketPriceTime);
+	}
+	
 	protected IImportDbDataService getImportDataDbService() {
 		return (ImportDbDataService) AppContext.getInstance().getContext().getBean(ImportDbDataService.class);
 	}
+
+	
 }

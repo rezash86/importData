@@ -1,5 +1,6 @@
 package com.reza.importdata.setup.api;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.reza.importdata.model.MarketPrice;
@@ -21,4 +22,17 @@ public interface IImportDbService {
 	 * @return True if it imports all the data correctly
 	 */
 	public boolean importData(List<MarketPrice> marketPrices);
+	
+	/**
+	 * Returns list of marketPrices in the localDataTime
+	 * @param marketPriceTime
+	 * @return List
+	 */
+	public  List<MarketPrice> getData(LocalDateTime marketPriceTime);
+
+	/**
+	 * delete data from db in the localDataTime
+	 * @param marketPriceTime
+	 */
+	void deleteData(LocalDateTime marketPriceTime);
 }
